@@ -16,7 +16,7 @@ export const UpdateModal = () => {
 
 	const getUpdate = async () => {
 		try {
-			const response = await fetch('http://192.168.1.241:3000/get-latest');
+			const response = await fetch('https://api.snaptrap.io/get-latest');
 			const update = await response.json();
 			setData(update)
 			if (update.version !== VersionNumber.appVersion) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text, Toggle } from '@ui-kitten/components';
-import { storeValue } from '../Libs/Storage';
+import { storeValue } from '../libs/Storage';
 import { useEffect } from 'react/cjs/react.development';
 
 const useToggleState = (initialState = false) => {

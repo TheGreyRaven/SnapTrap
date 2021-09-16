@@ -73,4 +73,4 @@ The SnapTrap project is licensed under the terms of the GNU General Public Licen
 * [Downloads](https://snaptrap.io/downloads.html)
 * [Discord](https://discord.gg/invite/tuA4Q4UYDh)
 * [Twitter](https://twitter.com/theravengrey)
-* [Source code](https://github.com/aimeos/aimeos-typo3)
+* [Source code](https://github.com/TheGreyRaven/SnapTrap)

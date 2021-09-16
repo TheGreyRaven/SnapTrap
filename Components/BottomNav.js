@@ -1,11 +1,11 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomNavigation, BottomNavigationTab, Icon } from '@ui-kitten/components';
-import { SettingsScreen } from './Pages/Settings';
-import { SnapScreen } from './Pages/Snaps';
-import { HomeScreen } from './Pages/Home';
-import { ChatScreen } from './Pages/Chats';
-import { FaqScreen } from './Pages/Faq';
+import { SettingsScreen } from './pages/Settings';
+import { SnapScreen } from './pages/Snaps';
+import { HomeScreen } from './pages/Home';
+import { ChatScreen } from './pages/Chats';
+import { FaqScreen } from './pages/Faq';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
