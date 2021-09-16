@@ -1,7 +1,3 @@
-<a href="https://snaptrap.io/">
-    <img src="https://i.imgur.com/jIKlLqk.gif" alt="SnapTrap logo" title="SnapTrap" align="right" height="120" style="border-radius: 15px" />
-</a>
-
 # SnapTrap
 
 [SnapTrap](https://snaptrap.io) is a new Snapchat project that aims at bringing back some enhancing features to Snapchat with the use of the Xposed framework!
