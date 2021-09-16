@@ -1,6 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text, Toggle } from '@ui-kitten/components';
+import { storeValue } from '../Libs/Storage';
+import { useEffect } from 'react/cjs/react.development';
 
 const useToggleState = (initialState = false) => {
 	const [checked, setChecked] = React.useState(initialState);
@@ -14,8 +16,15 @@ const useToggleState = (initialState = false) => {
 
 export const SettingsScreen = () => {
 
-	const saveSnapToggle  = useToggleState();
-	const saveStoryToggle = useToggleState();
+	useEffect(async() => {
+		const value = await storeValue('test');
+		console.log(value)
+	})
+
+	const saveSnapToggle  	= useToggleState();
+	const saveStoryToggle 	= useToggleState();
+	const screenshotToggle 	= useToggleState();
+	const safetyNetToggle 	= useToggleState();
 
 	const renderItemHeader = (headerProps, info) => (
 		<View {...headerProps}>
@@ -57,18 +66,45 @@ export const SettingsScreen = () => {
 				</Text>
 			</Card>
 
+			<Card
+				style={styles.item}
+				status='primary'
+				header={headerProps => renderItemHeader(headerProps, 'Disable screenshot detection')}
+				footer={footerProps => renderItemFooter(footerProps, screenshotToggle)}>
+				<Text>
+					Disable screenshot detection completely!
+				</Text>
+			</Card>
+
+			<Card
+				style={styles.item_last}
+				status='primary'
+				header={headerProps => renderItemHeader(headerProps, 'SafetyNet checks')}
+				footer={footerProps => renderItemFooter(footerProps, safetyNetToggle)}>
+				<Text>
+					Automatically check SafetyNet integrity each time you launch Snapchat!
+				</Text>
+			</Card>
+
 		</ScrollView>
 	);
 };
+
+/**
+ * TODO: Use something like: https://github.com/vitalets/react-native-extended-stylesheet
+ */
 
 const styles = StyleSheet.create({
 	main: {
 		flex: 1,
 		backgroundColor: '#FBFBFB',
 		paddingHorizontal: 8,
-		paddingVertical: 10
+		paddingVertical: 10,
 	},
 	item: {
 		marginVertical: 4,
 	},
+	item_last: {
+		marginBottom: 20
+	}
 });
