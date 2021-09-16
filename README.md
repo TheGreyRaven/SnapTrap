@@ -4,9 +4,6 @@
 
 # SnapTrap
 
----
-
-
 [SnapTrap](https://snaptrap.io) is a new Snapchat project that aims at bringing back some enhancing features to Snapchat with the use of the Xposed framework!
 
 <img align="right" src="https://snaptrap.io/images/snaptrap-screenshot.png" height="60%">
