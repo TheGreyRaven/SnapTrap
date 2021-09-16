@@ -6,6 +6,7 @@
 
 ## Table of content
 
+- [Downloads](https://snaptrap.io/downloads.html)
 - [Requirements](#requirements)
     - [Root](#root)
     - [LSPosed](#lsposed)
