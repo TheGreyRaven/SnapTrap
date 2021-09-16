@@ -35,6 +35,9 @@ export const SettingsScreen = () => {
 	);
 
 	const renderItemFooter = (footerProps, toggleType) => (
+		/**
+		 * TODO: Add settings saving here maybe and just return the value?
+		 */
 		<Text {...footerProps}>
 			<Toggle
 				style={styles.toggle}
