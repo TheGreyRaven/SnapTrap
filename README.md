@@ -27,7 +27,8 @@ SnapTrap requires 3 things to work properly:
 ### Root
 
 We highly recommend using [Magisk](https://github.com/topjohnwu/Magisk)!
-You can find a guide on how to install Magisk here: [link](https://topjohnwu.github.io/Magisk/install.html)!
+
+You can find a guide on how to install it here: [link](https://topjohnwu.github.io/Magisk/install.html)!
 
 ### LSPosed
 
