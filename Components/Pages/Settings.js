@@ -15,16 +15,10 @@ const useToggleState = (initialState = false) => {
 };
 
 export const SettingsScreen = () => {
-
-	useEffect(async() => {
-		const value = await storeValue('test');
-		console.log(value)
-	})
-
-	const saveSnapToggle  	= useToggleState();
-	const saveStoryToggle 	= useToggleState();
-	const screenshotToggle 	= useToggleState();
-	const safetyNetToggle 	= useToggleState();
+	const saveSnap  	= useToggleState();
+	const saveStories  	= useToggleState();
+	const disableScreenshots  	= useToggleState();
+	const toggleSafety  	= useToggleState();
 
 	const renderItemHeader = (headerProps, info) => (
 		<View {...headerProps}>
@@ -34,18 +28,21 @@ export const SettingsScreen = () => {
 		</View>
 	);
 
-	const renderItemFooter = (footerProps, toggleType) => (
+	const renderItemFooter = (footerProps, toggleType) => {
 		/**
 		 * TODO: Add settings saving here maybe and just return the value?
 		 */
-		<Text {...footerProps}>
-			<Toggle
-				style={styles.toggle}
-				status='primary'
-				{...toggleType}>
-			</Toggle>
-		</Text>
-	);
+		console.log(footerProps, toggleType)
+		return (
+			<Text {...footerProps}>
+				<Toggle
+					style={styles.toggle}
+					status='primary'
+					{...toggleType}>
+				</Toggle>
+			</Text>
+		)
+	};
 
 	return (
 		<ScrollView style={styles.main}>
@@ -53,7 +50,7 @@ export const SettingsScreen = () => {
 				style={styles.item}
 				status='primary'
 				header={headerProps => renderItemHeader(headerProps, 'Save incoming Snaps')}
-				footer={footerProps => renderItemFooter(footerProps, saveSnapToggle)}>
+				footer={footerProps => renderItemFooter(footerProps, saveSnap)}>
 				<Text>
 					Automatically save all recived Snaps and don't mark them as viewed!{'\n'}
 				</Text>
@@ -63,7 +60,7 @@ export const SettingsScreen = () => {
 				style={styles.item}
 				status='primary'
 				header={headerProps => renderItemHeader(headerProps, 'Save Snapchat stories')}
-				footer={footerProps => renderItemFooter(footerProps, saveStoryToggle)}>
+				footer={footerProps => renderItemFooter(footerProps, saveStories)}>
 				<Text>
 					Automatically save all Snapchat stories and don't mark them as viewed!
 				</Text>
@@ -73,7 +70,7 @@ export const SettingsScreen = () => {
 				style={styles.item}
 				status='primary'
 				header={headerProps => renderItemHeader(headerProps, 'Disable screenshot detection')}
-				footer={footerProps => renderItemFooter(footerProps, screenshotToggle)}>
+				footer={footerProps => renderItemFooter(footerProps, disableScreenshots)}>
 				<Text>
 					Disable screenshot detection completely!
 				</Text>
@@ -83,7 +80,7 @@ export const SettingsScreen = () => {
 				style={styles.item_last}
 				status='primary'
 				header={headerProps => renderItemHeader(headerProps, 'SafetyNet checks')}
-				footer={footerProps => renderItemFooter(footerProps, safetyNetToggle)}>
+				footer={footerProps => renderItemFooter(footerProps, toggleSafety)}>
 				<Text>
 					Automatically check SafetyNet integrity each time you launch Snapchat!
 				</Text>
