@@ -1,23 +1,33 @@
 import { Button } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
-import { LogBox, StyleSheet, View, NativeModules } from 'react-native';
-const { SnapImageModule } = NativeModules;
+import { LogBox, StyleSheet, View } from 'react-native';
 import FbGrid from "react-native-fb-image-grid";
+import ImageView from "react-native-image-viewing";
 import { selectDirectory } from 'react-native-directory-picker';
-
-/*
-	TODO: Create some sort of function that takes an array and return 8 images for example and on next function call add another 8 and so on.
-*/
+import DefaultPreference from 'react-native-default-preference';
+import { fetchImagesPath, fetchUriImagesPath } from '../libs/Images';
 
 export const SnapScreen = () => {
 	const [snapImages, setImages] = useState([])
+	const [snapUriImages, setUriImages] = useState([])
 	const [visible, setIsVisible] = useState(false);
-	/**
-	 * TODO: onPress open grid slider gallery from another library
-	 */
+	const [imgIndex, setIndex] = useState(false);
 
-	useEffect(() => {
+	useEffect(async () => {
+		/**
+		 * TODO: Clean up this mess.
+		 */
 		LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+		if (DefaultPreference != null) {
+			DefaultPreference.get('savedUri').then(async(uri) => {
+				if (uri) {
+					const imgs = await fetchImagesPath(uri)
+					const uriImgs = await fetchUriImagesPath(uri)
+					setImages(imgs)
+					setUriImages(uriImgs)
+				}
+			})
+		}
 	}, [])
 
 	return (
@@ -26,22 +36,33 @@ export const SnapScreen = () => {
 				style={styles.btn}
 				size='small'
 				onPress={async () => {
+					/**
+					 * TODO: Clean up this mess.
+					 */
 					setImages([])
+					setUriImages([])
 					const uri = await selectDirectory()
-					let imgs = await SnapImageModule.getImagesFromPath(uri);
-
-					for (let i = 0; i < imgs.length; i++) {
-						setImages(snapImages => [...snapImages, imgs[i] ])
-					}
-					setIsVisible(true)
+					DefaultPreference.set('savedUri', uri).then(async (asd) => {
+						console.log(asd)
+						const uriImgs = await fetchUriImagesPath(uri)
+						const imgs = await fetchImagesPath(uri)
+						setImages(imgs)
+						setUriImages(uriImgs)
+					})
 				}}
 			>
 				CHANGE SAVE FOLDER
 			</Button>
 			<FbGrid
-            images={snapImages}
-			onPress={() => console.log('got press')}
-          />
+				images={snapImages}
+				onPress={(_, index) => {setIsVisible(true); setIndex(index)}}
+			/>
+			<ImageView
+				images={snapUriImages}
+				imageIndex={imgIndex}
+				visible={visible}
+				onRequestClose={() => setIsVisible(false)}
+			/>
 		</View>
 	)
 }
@@ -52,6 +73,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FBFBFB',
 		paddingHorizontal: 8,
 		paddingVertical: 10,
+		marginBottom: '10%'
 	},
 	btn: {
 		alignSelf: 'center',

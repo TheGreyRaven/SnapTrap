@@ -12,6 +12,8 @@ target 'SnapTrap' do
     :hermes_enabled => false
   )
 
+  pod 'RNDefaultPreference', :path => '../node_modules/react-native-default-preference'
+
   target 'SnapTrapTests' do
     inherit! :complete
     # Pods for testing

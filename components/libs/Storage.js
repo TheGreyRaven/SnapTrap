@@ -1,5 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+/**
+ * TODO: Make this more flexible
+ */
+
 export const storeValue = async (key, value) => {
 	if (value) {
 		try {

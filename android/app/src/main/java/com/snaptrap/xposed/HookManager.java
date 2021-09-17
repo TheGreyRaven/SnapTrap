@@ -5,11 +5,11 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
+import android.os.FileUtils;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -28,16 +28,13 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        // Mark the target app package name
         if (!lpparam.packageName.equals("com.snapchat.android"))
             return;
         XposedBridge.log("[SnapTrap]: Hooking into Snapchat...");
 
-
-        // onClick(View v) method in Hook MainActivity
         findAndHookMethod("android.app.Application", lpparam.classLoader, "attach", Context.class, new XC_MethodHook() {
             boolean canHook = false;
-            String compatibleSnapchat = "10.48.5.0 Beta";
+            String compatibleSnapchat = "11.45.0.38";
 
 
             @Override
@@ -82,6 +79,17 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
 
                         for (int i = 0; i < files.length; i++) {
                             XposedBridge.log("[SnapTrap] Found Snap named: " + files[i].getName());
+                            File checkFile = new File(files[i].getPath());
+                            long fileSizeInBytes = checkFile.length();
+                            long fileSizeInKB = fileSizeInBytes / 1024;
+                            long fileSizeInMB = fileSizeInKB / 1024;
+                            File destination;
+                            if (fileSizeInMB < 1) {
+                                destination = new File(home.getPath() + ".jpg");
+                            } else {
+                                destination = new File(home.getPath() + ".mp4");
+                            }
+                            checkFile.renameTo(destination);
                         }
 
                     } else {
@@ -91,8 +99,7 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                     XposedBridge.log("[SnapTrap]: ERROR " + e.getMessage());
                 }
 
-                /*findAndHookMethod("JS7", lpparam.classLoader, "b", "IS7", XC_MethodReplacement.DO_NOTHING, new XC_MethodHook() {
-
+                findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", XC_MethodReplacement.DO_NOTHING, new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                         XposedBridge.log("[SnapTrap]: Looking for Snapchat screenshot function...");
@@ -102,7 +109,7 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         XposedBridge.log("[SnapTrap]: Hooked and disabled screenshot detection!");
                     }
-                });*/
+                });
             }
         });
     }

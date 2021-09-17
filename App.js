@@ -6,8 +6,11 @@ import { Header } from './components/Header.js';
 import { TabNavigator } from './components/BottomNav.js';
 import { default as theme } from './custom-theme.json';
 import { NavigationContainer } from '@react-navigation/native';
+import DefaultPreference from 'react-native-default-preference';
+import { Platform } from 'react-native';
 
 export default () => {
+	if (Platform.OS === 'android') DefaultPreference.setName('SnapTrapStorage');
 	return (
 		<>
 			<IconRegistry icons={EvaIconsPack} />
