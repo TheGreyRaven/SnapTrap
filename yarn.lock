@@ -5592,11 +5592,6 @@
   dependencies:
     "prop-types" "^15.6.2"
 
-"react-native-matomo@^0.1.1":
-  "integrity" "sha512-7QJOZIaS7Pi/vHS9+bdebZ7moh/r4Cxu1SOc9pUlOwQIwskOQSCWL9gbxjYVPInTgWNYYc9rP+fR3so00bOOxA=="
-  "resolved" "https://registry.npmjs.org/react-native-matomo/-/react-native-matomo-0.1.1.tgz"
-  "version" "0.1.1"
-
 "react-native-page-list@^1.1.3":
   "integrity" "sha512-LvbU9qxxLTujQV6/IKUbzKkosSDGBG6enhf3cb/5oSy0wG50TTloXKaeZY75/ssp/mX7qSZiU9aayV7Q+Q8iUQ=="
   "resolved" "https://registry.npmjs.org/react-native-page-list/-/react-native-page-list-1.1.3.tgz"

@@ -6,11 +6,8 @@ import { Header } from './components/Header.js';
 import { TabNavigator } from './components/BottomNav.js';
 import { default as theme } from './custom-theme.json';
 import { NavigationContainer } from '@react-navigation/native';
-import Matomo from 'react-native-matomo';
 
 export default () => {
-	Matomo.initTracker('https://analytics.snaptrap.io/piwik.php', 1);
-	Matomo.trackAppDownload();
 	return (
 		<>
 			<IconRegistry icons={EvaIconsPack} />
