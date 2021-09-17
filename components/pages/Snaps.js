@@ -2,7 +2,7 @@ import { Button } from '@ui-kitten/components';
 import React, { useEffect, useState } from 'react';
 import { LogBox, StyleSheet, View, NativeModules } from 'react-native';
 const { SnapImageModule } = NativeModules;
-import ImageLayout from "react-native-image-layout";
+import FbGrid from "react-native-fb-image-grid";
 import { selectDirectory } from 'react-native-directory-picker';
 
 /*
@@ -11,7 +11,10 @@ import { selectDirectory } from 'react-native-directory-picker';
 
 export const SnapScreen = () => {
 	const [snapImages, setImages] = useState([])
-	const [doRerender, setRerender] = useState(false)
+	const [visible, setIsVisible] = useState(false);
+	/**
+	 * TODO: onPress open grid slider gallery from another library
+	 */
 
 	useEffect(() => {
 		LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
@@ -23,26 +26,22 @@ export const SnapScreen = () => {
 				style={styles.btn}
 				size='small'
 				onPress={async () => {
+					setImages([])
 					const uri = await selectDirectory()
 					let imgs = await SnapImageModule.getImagesFromPath(uri);
 
 					for (let i = 0; i < imgs.length; i++) {
-						setImages(snapImages => [...snapImages, { uri: imgs[i] }])
+						setImages(snapImages => [...snapImages, imgs[i] ])
 					}
-					setRerender(true)
+					setIsVisible(true)
 				}}
 			>
 				CHANGE SAVE FOLDER
 			</Button>
-			<ImageLayout
-				enableModal={true}
-				spacing={2}
-				imageContainerStyle={{ borderRadius: 10 }}
-				images={snapImages}
-				rerender={doRerender}
-				backgroundColor={'#FBFBFB'}
-				//onEndReached={}
-			/>
+			<FbGrid
+            images={snapImages}
+			onPress={() => console.log('got press')}
+          />
 		</View>
 	)
 }
