@@ -40,7 +40,7 @@ export const SettingsScreen = () => {
 			</Card>
 
 			<Card
-				style={styles.item}
+				style={styles.item_last}
 				status='primary'
 				header={headerProps => renderItemHeader(headerProps, 'Save Snapchat stories')}
 				footer={footerProps => renderItemFooter(footerProps)}>
@@ -49,7 +49,7 @@ export const SettingsScreen = () => {
 				</Text>
 			</Card>
 
-			<Card
+			{/* <Card
 				style={styles.item_last}
 				status='primary'
 				header={headerProps => renderItemHeader(headerProps, 'Disable screenshot detection')}
@@ -57,7 +57,7 @@ export const SettingsScreen = () => {
 				<Text>
 					Disable screenshot detection completely!
 				</Text>
-			</Card>
+			</Card> */}
 
 			{/* <Card
 				style={styles.item_last}

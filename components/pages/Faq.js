@@ -32,6 +32,7 @@ export const FaqScreen = () => (
 			- Save sent and recived chat messages.{'\n'}
 			- Send image from gallery.{'\n'}
 			- No ad blocking.{'\n'}
+			- Settings can't be toggled.{'\n'}
 			- All other features Snapchat modules have.{'\n'}{'\n'}
 
 			SnapTrap can save recived Snaps and stories without marking them as viewed, but that is not handled through hooking into Snapchat we do all that from the SnapTrap app itself!{'\n'}{'\n'}
