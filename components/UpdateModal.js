@@ -11,7 +11,6 @@ const UpdateHeader = (props) => (
 )
 
 export const UpdateModal = () => {
-	console.log(VersionNumber.appVersion)
 	const [visible, setVisible] = useState(false);
 	const [data, setData] 		= useState([]);
 
@@ -20,7 +19,7 @@ export const UpdateModal = () => {
 			const response = await fetch('https://api.snaptrap.io/get-latest');
 			const update = await response.json();
 			setData(update)
-			if (update.version !== VersionNumber.buildVersion) {
+			if (update.version !== VersionNumber.appVersion) {
 				setVisible(true)
 			}
 		} catch (error) {
