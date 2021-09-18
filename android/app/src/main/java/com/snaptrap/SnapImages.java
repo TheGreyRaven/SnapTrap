@@ -19,7 +19,6 @@ public class SnapImages extends ReactContextBaseJavaModule {
         super(context);
     }
 
-    // add to CalendarModule.java
     @Override
     public String getName() {
         return "SnapImageModule";

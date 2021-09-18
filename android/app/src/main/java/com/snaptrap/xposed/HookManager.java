@@ -1,20 +1,17 @@
 package com.snaptrap.xposed;
 
+import static com.snaptrap.libs.FileCopy.copySnapMedia;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
-import android.os.FileUtils;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -28,14 +25,13 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (!lpparam.packageName.contains("com.snapchat.androi"))
+        if (!lpparam.packageName.contains("com.snapchat.androi")) // This is not a typo, I have 3 different Snapchat versions installed on my phone and each one have a random last character.
             return;
-        XposedBridge.log("[SnapTrap]: Hooking into Snapchat...");
 
+        XposedBridge.log("[SnapTrap]: Hooking into Snapchat...");
         findAndHookMethod("android.app.Application", lpparam.classLoader, "attach", Context.class, new XC_MethodHook() {
             boolean canHook = false;
             String compatibleSnapchat = "11.45.0.38";
-
 
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -70,53 +66,20 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                     home.mkdir();
                 }
 
-                try {
-                    String snapStorage = String.format("%s/files/file_manager/chat_snap/", snapContext.getApplicationInfo().dataDir);
-
-                    File snapPath = new File(snapStorage);
-                    if (snapPath.exists()) {
-                        File[] files = snapPath.listFiles();
-
-                        for (int i = 0; i < files.length; i++) {
-                            XposedBridge.log("[SnapTrap] Found Snap named: " + files[i].getName());
-                            File checkFile = new File(files[i].getPath());
-                            long fileSizeInBytes = checkFile.length();
-                            long fileSizeInKB = fileSizeInBytes / 1024;
-                            long fileSizeInMB = fileSizeInKB / 1024;
-                            File destination;
-                            if (fileSizeInMB < 1) {
-                                XposedBridge.log("[SnapTrap] Found Snap image named: " + files[i].getName());
-                                destination = new File(home.getPath() + ".jpg");
-                            } else {
-                                XposedBridge.log("[SnapTrap] Found Snap video named: " + files[i].getName());
-                                destination = new File(home.getPath() + ".mp4");
-                            }
-                            if (checkFile.renameTo(destination)) {
-                                XposedBridge.log("[SnapTrap] Moved Snap named: " + files[i].getName());
-                            } else {
-                                XposedBridge.log("[SnapTrap] Could not move Snap named: " + files[i].getName());
-                            }
+                File snapStorage = new File(String.format("%s/files/file_manager/chat_snap/", snapContext.getApplicationInfo().dataDir));
+                if (snapStorage.exists()) {
+                    File[] files = snapStorage.listFiles();
+                    for (int i = 0; i < files.length; i++) {
+                        XposedBridge.log("[SnapTrap]: Found file: " + files[i].getPath());
+                        if (copySnapMedia(files[i], home)) {
+                            XposedBridge.log("[SnapTrap]: Successfully saved Snap: " + files[i].getPath());
+                        } else {
+                            XposedBridge.log("[SnapTrap]: Failed to save Snap: " + files[i].getPath());
                         }
-
-                    } else {
-                        XposedBridge.log("[SnapTrap]: ERROR failed to access stored Snaps directory!");
                     }
-                } catch (Exception e) {
-                    XposedBridge.log("[SnapTrap]: ERROR " + e.getMessage());
                 }
             }
         });
 
-        findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", XC_MethodReplacement.DO_NOTHING, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                XposedBridge.log("[SnapTrap]: Looking for Snapchat screenshot function...");
-            }
-
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                XposedBridge.log("[SnapTrap]: Hooked and disabled screenshot detection!");
-            }
-        });
     }
 }
