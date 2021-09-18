@@ -28,7 +28,7 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (!lpparam.packageName.equals("com.snapchat.android"))
+        if (!lpparam.packageName.equals("com.snapchat.android") || !lpparam.packageName.equals("com.snapchat.androif"))
             return;
         XposedBridge.log("[SnapTrap]: Hooking into Snapchat...");
 
