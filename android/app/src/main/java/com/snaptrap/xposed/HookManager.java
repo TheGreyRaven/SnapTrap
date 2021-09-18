@@ -85,11 +85,17 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                             long fileSizeInMB = fileSizeInKB / 1024;
                             File destination;
                             if (fileSizeInMB < 1) {
+                                XposedBridge.log("[SnapTrap] Found Snap image named: " + files[i].getName());
                                 destination = new File(home.getPath() + ".jpg");
                             } else {
+                                XposedBridge.log("[SnapTrap] Found Snap video named: " + files[i].getName());
                                 destination = new File(home.getPath() + ".mp4");
                             }
-                            checkFile.renameTo(destination);
+                            if (checkFile.renameTo(destination)) {
+                                XposedBridge.log("[SnapTrap] Moved Snap named: " + files[i].getName());
+                            } else {
+                                XposedBridge.log("[SnapTrap] Could not move Snap named: " + files[i].getName());
+                            }
                         }
 
                     } else {
@@ -98,18 +104,18 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                 } catch (Exception e) {
                     XposedBridge.log("[SnapTrap]: ERROR " + e.getMessage());
                 }
+            }
+        });
 
-                findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", XC_MethodReplacement.DO_NOTHING, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        XposedBridge.log("[SnapTrap]: Looking for Snapchat screenshot function...");
-                    }
+        findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", XC_MethodReplacement.DO_NOTHING, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                XposedBridge.log("[SnapTrap]: Looking for Snapchat screenshot function...");
+            }
 
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        XposedBridge.log("[SnapTrap]: Hooked and disabled screenshot detection!");
-                    }
-                });
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                XposedBridge.log("[SnapTrap]: Hooked and disabled screenshot detection!");
             }
         });
     }
