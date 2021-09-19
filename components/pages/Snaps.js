@@ -42,9 +42,9 @@ export const SnapScreen = () => {
 					setImages([])
 					setUriImages([])
 					const uri = await selectDirectory()
-					DefaultPreference.set('savedUri', uri).then(async (value) => {
-						const uriImgs = await fetchUriImagesPath(value)
-						const imgs = await fetchImagesPath(value)
+					DefaultPreference.set('savedUri', uri).then(async () => {
+						const uriImgs = await fetchUriImagesPath(uri)
+						const imgs = await fetchImagesPath(uri)
 						setImages(imgs)
 						setUriImages(uriImgs)
 					})
