@@ -14,7 +14,7 @@ const Footer = (props) => (
 		<Button
 			style={styles.btn}
 			size='small'
-			onPress={() => { Linking.openURL('https://google.com') }}
+			onPress={() => { Linking.openURL('https://discord.gg/invite/tuA4Q4UYDh') }}
 		>
 			DISCORD
 		</Button>
