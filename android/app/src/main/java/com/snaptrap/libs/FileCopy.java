@@ -60,7 +60,7 @@ public class FileCopy {
                 for(int in = 0; in < bytesRead; in++)
                     builder.append(String.format("%02x", buffer[in] & 0xFF)).append(in != bytesRead - 1 ? " " : "");
         } catch (IOException e) {
-            e.printStackTrace();
+            XposedBridge.log("[SnapTrap]: ERROR " + e.getMessage());
         }
 
         return builder.substring(0, 17);

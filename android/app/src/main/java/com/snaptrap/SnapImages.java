@@ -14,6 +14,8 @@ import com.facebook.react.bridge.WritableArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.robv.android.xposed.XposedBridge;
+
 public class SnapImages extends ReactContextBaseJavaModule {
     SnapImages(ReactApplicationContext context) {
         super(context);
@@ -48,7 +50,7 @@ public class SnapImages extends ReactContextBaseJavaModule {
             }
             promise.resolve(promiseArray);
         } catch (Exception e) {
-            Log.e("SnapImages-getImages", e.getMessage());
+            XposedBridge.log("[SnapTrap]: ERROR " + e.getMessage());
             promise.reject(e);
         }
     }

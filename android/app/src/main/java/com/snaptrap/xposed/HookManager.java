@@ -67,8 +67,22 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                 }
 
                 File snapStorage = new File(String.format("%s/files/file_manager/chat_snap/", snapContext.getApplicationInfo().dataDir));
+
                 if (snapStorage.exists()) {
+                    XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder exists");
+                    XposedBridge.log("[SnapTrap]: Checking folder permissions: READ = " + snapStorage.canRead() + " WRITE = " + snapStorage.canWrite() + " EXECUTE = " + snapStorage.canExecute());
+                    if (!snapStorage.canRead()) {
+                        XposedBridge.log("[SnapTrap]: Trying to get read access...");
+                        if (snapStorage.setReadable(true)) {
+                            XposedBridge.log("[SnapTrap]: Read access was successful");
+                        } else {
+                            XposedBridge.log("[SnapTrap]: Failed to gain read access");
+                        }
+                    }
+
                     File[] files = snapStorage.listFiles();
+                    XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder have a length of: " + files.length);
+
                     for (int i = 0; i < files.length; i++) {
                         XposedBridge.log("[SnapTrap]: Found file: " + files[i].getPath());
                         if (copySnapMedia(files[i], home)) {
@@ -77,6 +91,8 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                             XposedBridge.log("[SnapTrap]: Failed to save Snap: " + files[i].getPath());
                         }
                     }
+                } else {
+                    XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder does NOT exists");
                 }
             }
         });
