@@ -19,6 +19,10 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
+    /**
+     * TODO: Refactor hook manager and move logs, media saving etc into separate class.
+     */
+
     @Override
     public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam lpparam) throws Throwable {
         XposedBridge.log(lpparam.toString());
