@@ -71,7 +71,7 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
 
                 if (snapStorage.exists()) {
                     XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder exists");
-                    XposedBridge.log("[SnapTrap]: Checking folder permissions: READ = " + snapStorage.canRead() + " WRITE = " + snapStorage.canWrite() + " EXECUTE = " + snapStorage.canExecute());
+                    XposedBridge.log("[SnapTrap]: Checking folder permissions: READ = " + snapStorage.canRead() + ", WRITE = " + snapStorage.canWrite() + ", EXECUTE = " + snapStorage.canExecute());
                     if (!snapStorage.canRead()) {
                         XposedBridge.log("[SnapTrap]: Trying to get read access...");
                         if (snapStorage.setReadable(true)) {
@@ -96,8 +96,13 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                     XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder does NOT exists");
                 }
 
-                XposedBridge.log("[SnapTrap]: Trying to disable Snapchat screenshot detection...");
-                findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", XC_MethodReplacement.DO_NOTHING);
+                findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
+                        XposedBridge.log("[SnapTrap]: Screenshot detected, replacing method with null return.");
+                        return null;
+                    }
+                });
             }
         });
     }
