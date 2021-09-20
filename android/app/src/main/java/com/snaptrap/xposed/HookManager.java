@@ -12,6 +12,7 @@ import java.io.File;
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -94,8 +95,10 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                 } else {
                     XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder does NOT exists");
                 }
+
+                XposedBridge.log("[SnapTrap]: Trying to disable Snapchat screenshot detection...");
+                findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", XC_MethodReplacement.DO_NOTHING);
             }
         });
-
     }
 }
