@@ -2,7 +2,7 @@
 
 [SnapTrap](https://snaptrap.io) is a new Snapchat project that aims at bringing back some enhancing features to Snapchat with the use of the Xposed framework!
 
-Current compatible Snapchat version: ``11.45.0.38``
+Current compatible Snapchat version: ``11.46.0.33``
 
 <img align="right" src="https://snaptrap.io/images/snaptrap-screenshot.png" height="60%">
 

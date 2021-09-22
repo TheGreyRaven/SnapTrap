@@ -25,7 +25,6 @@ export const FaqScreen = () => (
 	<ScrollView style={styles.main}>
 		<Card header={Header} footer={Footer} status='primary'>
 			<Text>This app CAN'T do the following as for now:{'\n'}{'\n'}
-			- Bypass screenshot detection.{'\n'}
 			- Bypass Snapchats root detection.{'\n'}
 			- View Snaps in Snapchat undetected.{'\n'}
 			- View stories in Snapchat undetected.{'\n'}
