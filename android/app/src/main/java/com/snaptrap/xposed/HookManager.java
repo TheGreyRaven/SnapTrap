@@ -36,7 +36,7 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
         XposedBridge.log("[SnapTrap]: Hooking into Snapchat...");
         findAndHookMethod("android.app.Application", lpparam.classLoader, "attach", Context.class, new XC_MethodHook() {
             boolean canHook = false;
-            String compatibleSnapchat = "11.45.0.38";
+            String compatibleSnapchat = "11.46.0.33";
 
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -71,11 +71,18 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                     home.mkdir();
                 }
 
+                XposedBridge.log("[SnapTrap]: Checking home folder permissions: READ = " + home.canRead() + ", WRITE = " + home.canWrite());
+                if (!home.canRead() || !home.canWrite()) {
+                    home.setReadable(true);
+                    home.setWritable(true);
+                }
+
                 File snapStorage = new File(String.format("%s/files/file_manager/chat_snap/", snapContext.getApplicationInfo().dataDir));
 
                 if (snapStorage.exists()) {
                     XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder exists");
-                    XposedBridge.log("[SnapTrap]: Checking folder permissions: READ = " + snapStorage.canRead() + ", WRITE = " + snapStorage.canWrite() + ", EXECUTE = " + snapStorage.canExecute());
+                    XposedBridge.log("[SnapTrap]: Checking folder permissions: READ = " + snapStorage.canRead() + ", WRITE = " + snapStorage.canWrite());
+
                     if (!snapStorage.canRead()) {
                         XposedBridge.log("[SnapTrap]: Trying to get read access...");
                         if (snapStorage.setReadable(true)) {
@@ -100,7 +107,7 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                     XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder does NOT exists");
                 }
 
-                findAndHookMethod("QU7", lpparam.classLoader, "b", "PU7", new XC_MethodReplacement() {
+                findAndHookMethod("le8", lpparam.classLoader, "b", "ke8", new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                         XposedBridge.log("[SnapTrap]: Screenshot detected, replacing method with null return.");
