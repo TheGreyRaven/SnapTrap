@@ -55,6 +55,7 @@ Here is a list of **working** SnapTrap features:
 
 * Saving incoming Snapchat images and videos (without overlay).
 * Saving Snapchat stories.
+* Screenshot detection bypass.
 * Compatible Snapchat version checks.
 * Automatic updates.
 
