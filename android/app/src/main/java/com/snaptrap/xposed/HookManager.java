@@ -6,6 +6,9 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
+import android.widget.Toast;
+
+import com.snaptrap.libs.SnapchatData;
 
 import java.io.File;
 
@@ -36,7 +39,7 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
         XposedBridge.log("[SnapTrap]: Hooking into Snapchat...");
         findAndHookMethod("android.app.Application", lpparam.classLoader, "attach", Context.class, new XC_MethodHook() {
             boolean canHook = false;
-            String compatibleSnapchat = "11.46.0.33";
+            String snapchatVersion;
 
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -44,21 +47,26 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                 try {
                     Context snapContext = (Context) param.args[0];
                     PackageInfo packageInfo = snapContext.getPackageManager().getPackageInfo(snapContext.getPackageName(), 0);
-                    String version = packageInfo.versionName;
-                    XposedBridge.log("[SnapTrap]: Snapchat version: " + version);
-                    if (compatibleSnapchat.contains(version)) {
+                    snapchatVersion = packageInfo.versionName;
+                    XposedBridge.log("[SnapTrap]: Snapchat version: " + snapchatVersion);
+
+                    if (SnapchatData.versions.get(snapchatVersion) != null) {
                         canHook = true;
                         XposedBridge.log("[SnapTrap]: Allowing hooking...");
+                        Toast.makeText(snapContext, "SnapTrap loaded!", Toast.LENGTH_LONG).show();
+                    } else {
+                        XposedBridge.log("[SnapTrap]: Incompatible version, aborting hooks.");
+                        Toast.makeText(snapContext, "Incompatible Snapchat version!", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
-                    XposedBridge.log("[SnapChat]: ERROR " + e.getMessage());
+                    XposedBridge.log("[SnapTrap]: ERROR " + e.getMessage());
                 }
             }
 
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (!canHook) {
-                    XposedBridge.log("[SnapTrap]: ERROR incompatible Snapchat found, expected version: " + compatibleSnapchat);
+                    XposedBridge.log("[SnapTrap]: ERROR incompatible Snapchat found");
                     return;
                 }
 
@@ -103,11 +111,13 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                             XposedBridge.log("[SnapTrap]: Failed to save Snap: " + files[i].getPath());
                         }
                     }
+                    Toast.makeText(snapContext, "Trying to save: " + files.length + " snaps!", Toast.LENGTH_LONG).show();
                 } else {
                     XposedBridge.log("[SnapTrap]: Snapchat 'chat_snap' folder does NOT exists");
                 }
 
-                findAndHookMethod("le8", lpparam.classLoader, "b", "ke8", new XC_MethodReplacement() {
+                // Shorten this shit below
+                findAndHookMethod((String) SnapchatData.versions.get(snapchatVersion).get("className"), lpparam.classLoader, (String) SnapchatData.versions.get(snapchatVersion).get("methodName"), SnapchatData.versions.get(snapchatVersion).get("parameterTypesAndCallback"), new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                         XposedBridge.log("[SnapTrap]: Screenshot detected, replacing method with null return.");

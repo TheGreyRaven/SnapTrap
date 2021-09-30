@@ -41,12 +41,19 @@ public class MainApplication extends Application implements ReactApplication {
     return mReactNativeHost;
   }
 
-  @Override
+    private static Context context;
+
+    @Override
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    MainApplication.context = getApplicationContext();
   }
+
+    public static Context getAppContext() {
+        return MainApplication.context;
+    }
 
   /**
    * Loads Flipper in React Native templates. Call this in the onCreate method with something like
