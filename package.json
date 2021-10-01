@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.1.0",
-    "@react-native-async-storage/async-storage": "^1.15.7",
     "@react-navigation/bottom-tabs": "^6.0.5",
     "@react-navigation/native": "^6.0.2",
     "@types/react-native-version-number": "^0.3.5",
