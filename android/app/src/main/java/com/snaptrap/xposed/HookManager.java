@@ -117,7 +117,12 @@ public class HookManager implements IXposedHookLoadPackage, IXposedHookInitPacka
                 }
 
                 // Shorten this shit below
-                findAndHookMethod((String) SnapchatData.versions.get(snapchatVersion).get("className"), lpparam.classLoader, (String) SnapchatData.versions.get(snapchatVersion).get("methodName"), SnapchatData.versions.get(snapchatVersion).get("parameterTypesAndCallback"), new XC_MethodReplacement() {
+                findAndHookMethod(
+                        (String) SnapchatData.versions.get(snapchatVersion).get("className"),
+                        lpparam.classLoader,
+                        (String) SnapchatData.versions.get(snapchatVersion).get("methodName"),
+                        SnapchatData.versions.get(snapchatVersion).get("parameterTypesAndCallback"),
+                new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                         XposedBridge.log("[SnapTrap]: Screenshot detected, replacing method with null return.");
