@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class SnapchatData {
 
-    // Nested ghetto stuff
+    // Nested ghetto stuff, should shorten this down
     static public HashMap<String, HashMap> versions = new HashMap<String, HashMap>() {{
         put("11.45.0.38", new HashMap<String, String>() {{
             put("className", "QU7");
@@ -15,6 +15,12 @@ public class SnapchatData {
             put("className", "le8");
             put("methodName", "b");
             put("parameterTypesAndCallback", "ke8");
+        }});
+
+        put("11.47.0.36", new HashMap<String, String>() {{
+            put("className", "qf8");
+            put("methodName", "b");
+            put("parameterTypesAndCallback", "pf8");
         }});
     }};
 }
