@@ -187,6 +187,7 @@ dependencies {
 	provided 'de.robv.android.xposed:api:82'
 	provided 'de.robv.android.xposed:api:82:sources'
     implementation "com.anggrayudi:storage:0.12.0"
+    implementation 'com.google.code.gson:gson:2.8.8'
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion

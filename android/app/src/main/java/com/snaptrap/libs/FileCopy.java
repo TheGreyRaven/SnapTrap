@@ -10,7 +10,7 @@ import de.robv.android.xposed.XposedBridge;
 
 
 public class FileCopy {
-    public static boolean copySnapMedia(File fromFile, File homeDir) {
+    public static boolean copySnapMedia(File fromFile, String homeDir) {
 
         try {
            String hexCode = getHex(fromFile);

@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Card, Text, Toggle } from '@ui-kitten/components';
+import { NativeModules } from 'react-native';
+const { SnapSettings } = NativeModules;
 
 export const SettingsScreen = () => {
+	const [saveSnaps, setSaveSnaps] = React.useState(true);
+	const [disableScreenshot, setDisableScreenshot] = React.useState(true);
+
+	useEffect(async() => {
+		const SaveSnaps = await SnapSettings.exportGetSaveSnaps();
+		const DisableScreenshot = await SnapSettings.exportGetDisableScreenshot();
+
+		setSaveSnaps(SaveSnaps);
+		setDisableScreenshot(DisableScreenshot);
+	})
 
 	const renderItemHeader = (headerProps, info) => (
 		<View {...headerProps}>
@@ -12,28 +24,25 @@ export const SettingsScreen = () => {
 		</View>
 	);
 
-	const renderItemFooter = (footerProps) => {
-		/**
-		 * TODO: Add settings saving here maybe and just return the value?
-		 */
-		return (
-			<Text {...footerProps}>
-				<Toggle
-					style={styles.toggle}
-					status='primary'
-					checked={true}>
-				</Toggle>
-			</Text>
-		)
-	};
-
 	return (
 		<ScrollView style={styles.main}>
 			<Card
 				style={styles.item}
 				status='primary'
 				header={headerProps => renderItemHeader(headerProps, 'Save incoming Snaps')}
-				footer={footerProps => renderItemFooter(footerProps)}>
+				footer={footerProps => {
+					return (<Text {...footerProps}>
+						<Toggle
+							style={styles.toggle}
+							status='primary'
+							checked={saveSnaps}
+							onChange={async (isChecked) => {
+								setSaveSnaps(isChecked);
+								await SnapSettings.exportSetSaveSnaps(isChecked);
+							}}>
+						</Toggle>
+					</Text>)
+				}}>
 				<Text>
 					Automatically save all recived Snaps and don't mark them as viewed!{'\n'}
 				</Text>
@@ -42,10 +51,22 @@ export const SettingsScreen = () => {
 			<Card
 				style={styles.item_last}
 				status='primary'
-				header={headerProps => renderItemHeader(headerProps, 'Save Snapchat stories')}
-				footer={footerProps => renderItemFooter(footerProps)}>
+				header={headerProps => renderItemHeader(headerProps, 'Bypass Screenshots')}
+				footer={footerProps => {
+					return(<Text {...footerProps}>
+						<Toggle
+							style={styles.toggle}
+							status='primary'
+							checked={disableScreenshot}
+							onChange={async (isChecked) => {
+								setDisableScreenshot(isChecked)
+								await SnapSettings.exportSetDisableScreenshot(isChecked);
+							}}>
+						</Toggle>
+					</Text>)
+				}}>
 				<Text>
-					Automatically save all Snapchat stories and don't mark them as viewed!
+					Completely bypass Snapchat screenshots detection!
 				</Text>
 			</Card>
 
