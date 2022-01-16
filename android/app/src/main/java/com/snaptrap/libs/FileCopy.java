@@ -6,26 +6,42 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+
 import de.robv.android.xposed.XposedBridge;
 
 
 public class FileCopy {
+    static final long JPG_HEADER = 0xFFD8FFE00010L;
+    static final long PNG_HEADER = 0x89504E470D0AL;
+    static final long WEBP_HEADER = 0x524946460000L;
+    static final long MP4_HEADER = 0x000000006674L;
+    static final long WEBP_MASK = 0xFFFFFFFF0000L;
+    static final long MP4_MASK = 0xFFFFFF00FFFFL;
+
+    private static String getFileExtension(long headerBytes) {
+        if (headerBytes == JPG_HEADER) {
+            return ".jpg";
+        }
+        if (headerBytes == PNG_HEADER) {
+            return ".png";
+        }
+        // The following have "wildcard" bits that can be masked out for the comparison
+        if ((headerBytes & MP4_MASK) == MP4_HEADER) {
+            return ".mp4";
+        }
+        if ((headerBytes & WEBP_MASK) == WEBP_HEADER) {
+            return ".webp";
+        }
+        return "";
+    }
+
     public static boolean copySnapMedia(File fromFile, String homeDir) {
-
         try {
-           String hexCode = getHex(fromFile);
-           String extension;
-
-           if (hexCode.contains("ff d8 ff e0 00 10")) {
-               extension = ".jpg";
-           } else if (hexCode.contains("89 50 4e 47 0d 0a")) {
-               extension = ".png";
-           } else if (checkWildcard(hexCode, "00 00 00 ** 66 74", '*')) {
-               extension = ".mp4";
-           } else if (checkWildcard(hexCode, "52 49 46 46 ** **", '*')) {
-               extension = ".webp";
-           } else {
-               XposedBridge.log("[SnapTrap]: File " + fromFile.getName() + " is unknown");
+           long header  = getHeaderBytes(fromFile);
+           String extension = getFileExtension(header);
+           if (extension.equals("")) {
+               XposedBridge.log(String.format("[SnapTrap]: File %s is unknown. Header = 0x%012x", fromFile.getName(), header));
                return false;
            }
 
@@ -50,33 +66,22 @@ public class FileCopy {
         }
     }
 
-    public static String getHex(File file) {
-        StringBuilder builder = new StringBuilder();
+    public static long getHeaderBytes(File file) {
+        // We only check for the first 6 bytes of the header,
+        // add 2 more for 64-bit long padding.
+        byte[] buffer = new byte[8];
         try {
             FileInputStream fin = new FileInputStream(file.getPath());
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while((bytesRead = fin.read(buffer)) > -1)
-                for(int in = 0; in < bytesRead; in++)
-                    builder.append(String.format("%02x", buffer[in] & 0xFF)).append(in != bytesRead - 1 ? " " : "");
+            int bytesRead = 0;
+            while (bytesRead >= 0 && bytesRead < 6) {
+                // Read into the buffer the first 6 bytes of the file,
+                // offset by 2 to keep the buffer's upper bits 0.
+                bytesRead = fin.read(buffer, 2, 6);
+            }
         } catch (IOException e) {
             XposedBridge.log("[SnapTrap]: ERROR " + e.getMessage());
         }
-
-        return builder.substring(0, 17);
-    }
-
-    public static boolean checkWildcard(String s1, String s2, char wildCard) {
-        if(s1.length() != s2.length())
-            return false;
-
-        for(int i=0; i<s1.length(); i++) {
-            char c1 = s1.charAt(i), c2 = s2.charAt(i);
-            if(c1!=wildCard && c2!=wildCard && c1!=c2) {
-                return false;
-            }
-        }
-
-        return true;
+        // Return the 64-bit long representation of the read bits
+        return ByteBuffer.wrap(buffer).getLong();
     }
 }
