@@ -3,9 +3,7 @@ on:
   push:
     tags: [ "v*.*" ]
     branches: [ main ]
-  pull_request:
-    branches:
-      - main
+    pull_request: [ main ]
 
   workflow_dispatch:
 
